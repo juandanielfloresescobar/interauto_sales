@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interauto - Panel Comercial</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cream-bg: #f5f0e8;
+      --cream-light: #faf7f2;
+      --cream-dark: #e8e0d5;
+      --text-dark: #1a1a1a;
+      --text-muted: #666666;
+      --accent-red: #b4001a;
+      --accent-green: #16a34a;
+      --accent-red-light: #dc2626;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--cream-bg);
+      color: var(--text-dark);
+      min-height: 100vh;
+    }
+
+    /* ========== LOADER ========== */
+    .loader-premium {
+      position: fixed;
+      inset: 0;
+      background: var(--cream-bg);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    .loader-premium.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loader-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+      padding: 40px;
+    }
+
+    .loader-logo {
+      width: min(200px, 50vw);
+      height: auto;
+    }
+
+    .loader-progress-container {
+      width: 280px;
+      height: 4px;
+      background: var(--cream-dark);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .loader-progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-red), var(--accent-red-light));
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    .loader-text {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    /* ========== OVERLAY ========== */
+    .updating-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(245, 240, 232, 0.9);
+      z-index: 9998;
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .updating-overlay.active {
+      display: flex;
+    }
+
+    .updating-content {
+      text-align: center;
+      color: var(--text-dark);
+    }
+
+    .updating-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--cream-dark);
+      border-top-color: var(--accent-red);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ========== LOGO SUPERIOR IZQUIERDA ========== */
+    .logo-top-left {
+      position: fixed;
+      top: 24px;
+      left: 24px;
+      width: 180px;
+      height: auto;
+      z-index: 100;
+    }
+
+    /* ========== DASHBOARD ========== */
+    .comercial-dashboard {
+      min-height: 100vh;
+      background: var(--cream-bg);
+      padding: 100px 24px 40px;
+    }
+
+    .comercial-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .comercial-header h1 {
+      color: var(--text-dark);
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .comercial-header p {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    /* ========== FILTRO ========== */
+    .filtro-mes-comercial {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 32px;
+    }
+
+    .filtro-mes-comercial select {
+      padding: 12px 24px;
+      font-size: 1rem;
+      border-radius: 12px;
+      border: 2px solid var(--cream-dark);
+      background: var(--cream-light);
+      color: var(--text-dark);
+      cursor: pointer;
+      min-width: 200px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+    }
+
+    .filtro-mes-comercial select:focus {
+      outline: none;
+      border-color: var(--accent-red);
+    }
+
+    /* ========== KPI GRID ========== */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 1400px;
+      margin: 0 auto 40px;
+    }
+
+    .kpi-card {
+      background: var(--cream-light);
+      border: 1px solid var(--cream-dark);
+      border-radius: 20px;
+      padding: 28px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .kpi-card h3 {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+
+    .kpi-card .value {
+      color: var(--text-dark);
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .kpi-card .detail {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 8px;
+    }
+
+    .kpi-card .trend-positive { color: var(--accent-green); }
+    .kpi-card .trend-negative { color: var(--accent-red); }
+
+    /* ========== RANKING ========== */
+    .ranking-card {
+      grid-column: span 2;
+    }
+
+    .ranking-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .ranking-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: var(--cream-bg);
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .ranking-item {
+      cursor: pointer;
+    }
+
+    .ranking-item:hover {
+      background: var(--cream-dark);
+    }
+
+    /* ========== MODAL VENDEDOR ========== */
+    .modal-vendedor-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 10000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-vendedor-overlay.active {
+      display: flex;
+    }
+
+    .modal-vendedor-content {
+      background: var(--cream-light);
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+
+    .modal-vendedor-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      border-bottom: 2px solid var(--cream-dark);
+      padding-bottom: 16px;
+    }
+
+    .modal-vendedor-header h2 {
+      color: var(--text-dark);
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .modal-vendedor-close {
+      background: var(--accent-red);
+      color: #fff;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s ease;
+    }
+
+    .modal-vendedor-close:hover {
+      background: var(--accent-red-light);
+    }
+
+    .modal-vendedor-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .modal-stat-card {
+      background: var(--cream-bg);
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .modal-stat-card h4 {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .modal-stat-card .stat-value {
+      color: var(--text-dark);
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+
+    .modal-ventas-lista {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .modal-ventas-lista h3 {
+      color: var(--text-dark);
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .modal-venta-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: var(--cream-bg);
+      border-radius: 10px;
+      border-left: 4px solid var(--accent-red);
+    }
+
+    .modal-venta-info {
+      flex: 1;
+    }
+
+    .modal-venta-modelo {
+      color: var(--text-dark);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .modal-venta-fecha {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      margin-top: 4px;
+    }
+
+    /* ========== BOTÓN DESCARGA PNG ========== */
+    .ranking-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-download-png {
+      background: var(--text-dark);
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Montserrat', sans-serif;
+      transition: all 0.3s ease;
+    }
+
+    .btn-download-png:hover {
+      background: var(--accent-red);
+      transform: translateY(-2px);
+    }
+
+    .btn-download-png svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .ranking-position {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--text-dark);
+      border-radius: 10px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .ranking-position.gold { background: linear-gradient(135deg, #fbbf24, #f59e0b); }
+    .ranking-position.silver { background: linear-gradient(135deg, #9ca3af, #6b7280); }
+    .ranking-position.bronze { background: linear-gradient(135deg, #d97706, #b45309); }
+
+    .ranking-info { flex: 1; }
+
+    .ranking-name {
+      color: var(--text-dark);
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .ranking-stats {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
+
+    .ranking-value {
+      color: var(--accent-green);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    /* ========== MODELOS ========== */
+    .modelos-card {
+      grid-column: span 2;
+    }
+
+    .modelos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .modelo-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      background: var(--cream-bg);
+      border-radius: 12px;
+    }
+
+    .modelo-nombre {
+      color: var(--text-dark);
+      font-weight: 600;
+    }
+
+    .modelo-cantidad {
+      color: var(--accent-red);
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    /* ========== META PROGRESS ========== */
+    .meta-progress {
+      margin-top: 16px;
+    }
+
+    .meta-bar-container {
+      width: 100%;
+      height: 12px;
+      background: var(--cream-dark);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .meta-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-green), #22c55e);
+      border-radius: 999px;
+      transition: width 1s ease;
+    }
+
+    .meta-info {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* ========== CHART ========== */
+    .chart-section {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .chart-card {
+      background: var(--cream-light);
+      border: 1px solid var(--cream-dark);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .chart-card h3 {
+      color: var(--text-dark);
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .chart-container {
+      height: 350px;
+      position: relative;
+    }
+
+    /* ========== FOOTER ========== */
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      background: var(--cream-bg);
+    }
+
+    @media (max-width: 768px) {
+      .ranking-card, .modelos-card {
+        grid-column: span 1;
+      }
+
+      .kpi-card .value {
+        font-size: 1.8rem;
+      }
+
+      .comercial-logo {
+        width: 140px;
+      }
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="comercial_interauto.js"></script>
+</head>
+<body>
+
+  <!-- ========== LOADER ========== -->
+  <div id="loader" class="loader-premium">
+    <div class="loader-content">
+      <img src="logo.webp" alt="Interauto" class="loader-logo"/>
+      <div class="loader-progress-container">
+        <div class="loader-progress-bar" id="loader-progress"></div>
+      </div>
+      <p class="loader-text" id="loader-text">Iniciando sistema...</p>
+    </div>
+  </div>
+
+  <!-- ========== OVERLAY ========== -->
+  <div id="updating-overlay" class="updating-overlay">
+    <div class="updating-content">
+      <div class="updating-spinner"></div>
+      <p>Actualizando...</p>
+    </div>
+  </div>
+
+  <!-- ========== LOGO SUPERIOR IZQUIERDA ========== -->
+  <img src="logo.webp" alt="Interauto" class="logo-top-left"/>
+
+  <!-- ========== DASHBOARD ========== -->
+  <main class="comercial-dashboard">
+    <header class="comercial-header">
+      <h1>Panel Comercial Interauto</h1>
+      <p>Métricas de ventas y desempeño comercial</p>
+    </header>
+
+    <!-- Filtro de Mes -->
+    <div class="filtro-mes-comercial">
+      <select id="filtro-mes">
+        <option value="">Cargando...</option>
+      </select>
+    </div>
+
+    <!-- KPIs Principales -->
+    <div class="kpi-grid">
+      <!-- 1. Unidades Vendidas -->
+      <article class="kpi-card">
+        <h3>Unidades Vendidas</h3>
+        <p class="value" id="kpi-unidades">0</p>
+        <p class="detail" id="kpi-unidades-detalle">Este mes</p>
+      </article>
+
+      <!-- 2. Meta de Ventas -->
+      <article class="kpi-card">
+        <h3>Meta de Unidades</h3>
+        <p class="value" id="kpi-meta">0</p>
+        <div class="meta-progress">
+          <div class="meta-bar-container">
+            <div class="meta-bar" id="meta-bar"></div>
+          </div>
+          <div class="meta-info">
+            <span id="meta-actual">0 vendidas</span>
+            <span id="meta-porcentaje">0%</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 3. Crecimiento MoM -->
+      <article class="kpi-card">
+        <h3>Crecimiento vs Mes Anterior</h3>
+        <p class="value" id="kpi-crecimiento">0%</p>
+        <p class="detail" id="kpi-crecimiento-detalle">Comparado con el mes anterior</p>
+      </article>
+
+      <!-- 4. Prospectos -->
+      <article class="kpi-card">
+        <h3>Prospectos</h3>
+        <p class="value" id="kpi-prospectos">0</p>
+        <p class="detail" id="kpi-prospectos-detalle">Leads activos</p>
+      </article>
+
+      <!-- 5. Ranking de Vendedores -->
+      <article class="kpi-card ranking-card" id="ranking-card-container">
+        <div class="ranking-header">
+          <h3>Ranking de Vendedores</h3>
+          <button class="btn-download-png" id="btn-download-ranking" title="Descargar como PNG">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            PNG
+          </button>
+        </div>
+        <div class="ranking-list" id="ranking-vendedores">
+          <div class="ranking-item">
+            <div class="ranking-position">-</div>
+            <div class="ranking-info">
+              <p class="ranking-name">Sin datos</p>
+              <p class="ranking-stats">-</p>
+            </div>
+            <span class="ranking-value">-</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 6. Modelos Vendidos -->
+      <article class="kpi-card modelos-card">
+        <h3>Modelos Vendidos</h3>
+        <div class="modelos-grid" id="modelos-vendidos">
+          <div class="modelo-item">
+            <span class="modelo-nombre">Sin datos</span>
+            <span class="modelo-cantidad">0</span>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- Gráfico -->
+    <section class="chart-section">
+      <article class="chart-card">
+        <h3>Ventas y Meta - Últimos 3 Meses</h3>
+        <div class="chart-container">
+          <canvas id="chart-ventas"></canvas>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <!-- ========== MODAL VENDEDOR ========== -->
+  <div id="modal-vendedor" class="modal-vendedor-overlay">
+    <div class="modal-vendedor-content">
+      <div class="modal-vendedor-header">
+        <h2 id="modal-vendedor-nombre">Vendedor</h2>
+        <button class="modal-vendedor-close" id="modal-vendedor-close">&times;</button>
+      </div>
+      <div class="modal-vendedor-stats">
+        <div class="modal-stat-card">
+          <h4>Total Ventas</h4>
+          <p class="stat-value" id="modal-total-ventas">0</p>
+        </div>
+        <div class="modal-stat-card">
+          <h4>Modelos Distintos</h4>
+          <p class="stat-value" id="modal-modelos-distintos">0</p>
+        </div>
+      </div>
+      <div class="modal-ventas-lista">
+        <h3>Detalle de Ventas</h3>
+        <div id="modal-ventas-detalle">
+          <!-- Se llena dinámicamente -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Grupo SAA &copy; <span id="year">2025</span> - Panel Comercial Interauto
+  </footer>
+
+</body>
+</html>
