@@ -119,46 +119,48 @@
       to { transform: rotate(360deg); }
     }
 
-    /* ========== LOGO SUPERIOR IZQUIERDA ========== */
-    .logo-top-left {
-      position: absolute;
-      top: 24px;
-      left: 24px;
-      width: 180px;
-      height: auto;
-      z-index: 100;
-    }
-
     /* ========== DASHBOARD ========== */
     .comercial-dashboard {
       min-height: 100vh;
       background: var(--cream-bg);
-      padding: 100px 24px 40px;
+      padding: 40px 24px;
     }
 
+    /* ========== HEADER CON LOGO, TÍTULO Y FILTRO ========== */
     .comercial-header {
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       margin-bottom: 20px;
-      position: relative;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
-    .comercial-header h1 {
+    .header-logo {
+      width: 150px;
+      height: auto;
+    }
+
+    .header-title {
+      text-align: center;
+      flex: 1;
+    }
+
+    .header-title h1 {
       color: var(--text-dark);
       font-size: 2rem;
       font-weight: 700;
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
 
-    .comercial-header p {
+    .header-title p {
       color: var(--text-muted);
       font-size: 1rem;
     }
 
     /* ========== FILTRO ========== */
     .filtro-mes-comercial {
-      position: absolute;
-      top: 0;
-      right: 0;
     }
 
     .filtro-mes-comercial select {
@@ -600,14 +602,18 @@
     </div>
   </div>
 
-  <!-- ========== LOGO SUPERIOR IZQUIERDA ========== -->
-  <img src="logo.webp" alt="Interauto" class="logo-top-left"/>
-
   <!-- ========== DASHBOARD ========== -->
   <main class="comercial-dashboard">
     <header class="comercial-header">
-      <h1>Panel Comercial Interauto</h1>
-      <p>Métricas de ventas y desempeño comercial</p>
+      <!-- Logo -->
+      <img src="logo.webp" alt="Interauto" class="header-logo"/>
+
+      <!-- Título -->
+      <div class="header-title">
+        <h1>Panel Comercial Interauto</h1>
+        <p>Métricas de ventas y desempeño comercial</p>
+      </div>
+
       <!-- Filtro de Mes -->
       <div class="filtro-mes-comercial">
         <select id="filtro-mes">
