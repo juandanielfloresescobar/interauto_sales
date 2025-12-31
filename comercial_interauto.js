@@ -240,9 +240,11 @@ function actualizarRankingVendedores(mesVentas) {
 
   container.innerHTML = vendedoresOrdenados.map((v, idx) => {
     const posClass = idx === 0 ? 'gold' : idx === 1 ? 'silver' : idx === 2 ? 'bronze' : '';
+    // Mostrar trofeo para los primeros 3 lugares, número para el resto
+    const posContent = idx < 3 ? '🏆' : (idx + 1);
     return `
       <div class="ranking-item" onclick="mostrarVentasVendedor('${v.nombre.replace(/'/g, "\\'")}')">
-        <div class="ranking-position ${posClass}">${idx + 1}</div>
+        <div class="ranking-position ${posClass}">${posContent}</div>
         <div class="ranking-info">
           <p class="ranking-name">${v.nombre}</p>
           <p class="ranking-stats">${v.ventas} ${v.ventas === 1 ? 'venta' : 'ventas'}</p>
