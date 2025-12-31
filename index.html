@@ -561,17 +561,233 @@
       background: var(--cream-bg);
     }
 
+    /* ========== RESPONSIVE - TABLET ========== */
+    @media (max-width: 992px) {
+      .comercial-header {
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+
+      .header-logo {
+        width: 120px;
+      }
+
+      .header-title h1 {
+        font-size: 1.6rem;
+      }
+
+      .header-title p {
+        font-size: 0.9rem;
+      }
+
+      .filtro-mes-comercial select {
+        min-width: 160px;
+        padding: 10px 16px;
+        font-size: 0.9rem;
+      }
+    }
+
+    /* ========== RESPONSIVE - MÓVIL ========== */
     @media (max-width: 768px) {
+      .comercial-dashboard {
+        padding: 24px 16px;
+      }
+
+      .comercial-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+      }
+
+      .header-logo {
+        width: 100px;
+        order: 1;
+      }
+
+      .header-title {
+        order: 2;
+      }
+
+      .header-title h1 {
+        font-size: 1.4rem;
+      }
+
+      .header-title p {
+        font-size: 0.85rem;
+      }
+
+      .filtro-mes-comercial {
+        order: 3;
+        width: 100%;
+      }
+
+      .filtro-mes-comercial select {
+        width: 100%;
+        min-width: unset;
+      }
+
+      .kpi-grid {
+        gap: 16px;
+      }
+
       .ranking-card, .modelos-card {
         grid-column: span 1;
+      }
+
+      .kpi-card {
+        padding: 20px;
       }
 
       .kpi-card .value {
         font-size: 1.8rem;
       }
 
-      .comercial-logo {
-        width: 140px;
+      .kpi-card h3 {
+        font-size: 0.8rem;
+      }
+
+      .ranking-item {
+        padding: 12px;
+        gap: 12px;
+      }
+
+      .ranking-position {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+      }
+
+      .ranking-position.gold,
+      .ranking-position.silver,
+      .ranking-position.bronze {
+        font-size: 1.1rem;
+      }
+
+      .ranking-name {
+        font-size: 0.9rem;
+      }
+
+      .ranking-stats {
+        font-size: 0.75rem;
+      }
+
+      .ranking-value {
+        font-size: 0.95rem;
+      }
+
+      .ranking-header {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .ranking-header h3 {
+        flex: 1;
+        min-width: 150px;
+      }
+
+      .btn-download-png {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+      }
+
+      .modelos-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .modelo-item {
+        padding: 12px;
+      }
+
+      .modelo-nombre {
+        font-size: 0.9rem;
+      }
+
+      .modelo-cantidad {
+        font-size: 1rem;
+      }
+
+      .chart-card {
+        padding: 20px;
+      }
+
+      .chart-card h3 {
+        font-size: 1rem;
+      }
+
+      .chart-container {
+        height: 280px;
+      }
+
+      /* Modal responsive */
+      .modal-vendedor-content {
+        padding: 20px;
+        margin: 10px;
+        max-height: 90vh;
+      }
+
+      .modal-vendedor-header h2 {
+        font-size: 1.1rem;
+      }
+
+      .modal-vendedor-stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .modal-stat-card {
+        padding: 12px;
+      }
+
+      .modal-stat-card .stat-value {
+        font-size: 1.3rem;
+      }
+    }
+
+    /* ========== RESPONSIVE - MÓVIL PEQUEÑO ========== */
+    @media (max-width: 480px) {
+      .comercial-dashboard {
+        padding: 16px 12px;
+      }
+
+      .header-logo {
+        width: 80px;
+      }
+
+      .header-title h1 {
+        font-size: 1.2rem;
+      }
+
+      .header-title p {
+        font-size: 0.8rem;
+      }
+
+      .kpi-card .value {
+        font-size: 1.5rem;
+      }
+
+      .ranking-item {
+        flex-wrap: wrap;
+      }
+
+      .ranking-info {
+        flex: 1;
+        min-width: 120px;
+      }
+
+      .ranking-value {
+        width: 100%;
+        text-align: right;
+        margin-top: 8px;
+        padding-left: 44px;
+      }
+
+      .chart-container {
+        height: 220px;
+      }
+
+      .loader-progress-container {
+        width: 200px;
       }
     }
   </style>
